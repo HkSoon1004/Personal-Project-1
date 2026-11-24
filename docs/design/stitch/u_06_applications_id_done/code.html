@@ -1,0 +1,221 @@
+<!DOCTYPE html><html lang="ko"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>지원 완료 — 커리어랩</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'canvas': '#f5f1ec',
+        'on-canvas': '#111111',
+        'surface-1': '#ffffff',
+        'on-surface-1': '#111111',
+        'surface-2': '#ebe5dd',
+        'on-surface-2': '#111111',
+        'primary': '#111111',
+        'on-primary': '#ffffff',
+        'fin-orange': '#ff5600',
+        'ink': '#111111',
+        'ink-muted': '#626260',
+        'ink-subtle': '#7b7b78',
+        'ink-tertiary': '#9c9fa5',
+        'hairline': '#d3cec6',
+        'hairline-soft': '#e5e0d8',
+        'inverse-canvas': '#000000',
+        'inverse-ink': '#ffffff',
+        'inverse-ink-muted': '#a3a3a3',
+        'semantic-error': '#dc2626',
+        'semantic-success': '#15803d',
+        'report-blue': '#2563eb',
+        'report-green': '#16a34a',
+        'report-pink': '#db2777',
+        'report-lime': '#65a30d',
+        'report-orange': '#f97316',
+        'brand-blue': '#0007cb',
+      },
+      borderRadius: {
+        'xs': '4px',
+        'sm': '6px',
+        'md': '8px',
+        'lg': '12px',
+        'xl': '16px',
+        'xxl': '24px',
+        'pill': '9999px',
+        'full': '9999px',
+      },
+      spacing: {
+        'xxs': '4px',
+        'xs': '8px',
+        'sm': '12px',
+        'md': '16px',
+        'lg': '24px',
+        'xl': '32px',
+        'xxl': '48px',
+        'section': '96px',
+      },
+      fontFamily: {
+        'display': ['"Inter"', 'sans-serif'],
+        'headline': ['"Inter"', 'sans-serif'],
+        'card': ['"Inter"', 'sans-serif'],
+        'subhead': ['"Inter"', 'sans-serif'],
+        'body': ['"Inter"', 'sans-serif'],
+        'caption': ['"Inter"', 'sans-serif'],
+        'button': ['"Inter"', 'sans-serif'],
+        'eyebrow': ['"Inter"', 'sans-serif'],
+        'mono': ['"JetBrains Mono"', 'monospace'],
+      },
+      fontSize: {
+        'display-xl': ['72px', { lineHeight: '76px', letterSpacing: '-2.0px', fontWeight: '500' }],
+        'display-xl-mobile': ['32px', { lineHeight: '36px', letterSpacing: '-0.8px', fontWeight: '500' }],
+        'display-lg': ['56px', { lineHeight: '62px', letterSpacing: '-1.4px', fontWeight: '500' }],
+        'display-lg-mobile': ['30px', { lineHeight: '34px', letterSpacing: '-0.6px', fontWeight: '500' }],
+        'display-md': ['40px', { lineHeight: '46px', letterSpacing: '-0.8px', fontWeight: '500' }],
+        'display-md-mobile': ['28px', { lineHeight: '33px', letterSpacing: '-0.4px', fontWeight: '500' }],
+        'headline': ['28px', { lineHeight: '34px', letterSpacing: '-0.5px', fontWeight: '500' }],
+        'card-title': ['22px', { lineHeight: '28px', letterSpacing: '-0.3px', fontWeight: '500' }],
+        'subhead': ['20px', { lineHeight: '28px', letterSpacing: '-0.2px', fontWeight: '400' }],
+        'body-lg': ['18px', { lineHeight: '27px', letterSpacing: '-0.1px', fontWeight: '400' }],
+        'body': ['16px', { lineHeight: '24px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-sm': ['14px', { lineHeight: '21px', letterSpacing: '0px', fontWeight: '400' }],
+        'caption': ['12px', { lineHeight: '17px', letterSpacing: '0px', fontWeight: '400' }],
+        'button': ['15px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '500' }],
+        'eyebrow': ['14px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '500' }],
+        'mono': ['13px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '400' }],
+      },
+      transitionDuration: {
+        'state-change': '100ms',
+        'surface-enter': '200ms',
+        'surface-exit': '150ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 0, 1)',
+        'surface-exit': 'cubic-bezier(0.3, 0, 1, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet">
+  <style>.material-symbols-outlined, .material-symbols-rounded, .material-symbols-sharp, .material-icons { display: inline-block; width: 1em; height: 1em; line-height: 1 !important; box-sizing: content-box; overflow: hidden; white-space: nowrap; direction: ltr; vertical-align: middle; }</style>
+</head>
+<body class="bg-canvas text-ink font-body antialiased min-h-[1024px] flex flex-col" data-stitch-vh="min-h-[1024px]===min-h-screen">
+
+  <!-- Logged-in GNB -->
+  <header class="sticky top-0 z-30 bg-canvas border-b border-hairline-soft">
+    <div class="max-w-[1280px] mx-auto px-lg h-14 flex items-center justify-between gap-lg">
+      <div class="flex items-center gap-xxl">
+        <a href="/" class="inline-flex items-center gap-xs text-ink rounded-xs">
+          <span class="w-6 h-6 rounded-xs bg-primary text-on-primary inline-flex items-center justify-center font-mono text-caption">C</span>
+          <span data-design-text-token="button" class="font-button text-button text-ink">커리어랩</span>
+        </a>
+        <nav aria-label="주 메뉴" class="hidden md:flex items-center gap-lg">
+          <a href="/courses" data-design-text-token="body-sm" class="font-body text-body-sm text-ink hover:text-ink-muted">과정</a>
+          <a href="#briefing" data-design-text-token="body-sm" class="inline-flex items-center gap-xs font-body text-body-sm text-ink-muted hover:text-ink">
+            <span>설명회</span>
+            <span data-design-text-token="caption" class="font-caption text-caption bg-surface-2 text-ink-muted px-xs py-xxs rounded-xs">준비중</span>
+          </a>
+        </nav>
+      </div>
+      <div class="flex items-center gap-sm">
+        <a href="/my" data-design-text-token="body-sm" class="font-body text-body-sm text-ink px-sm py-xs rounded-md hover:bg-surface-2">마이페이지</a>
+        <a href="/logout" data-design-text-token="body-sm" class="font-body text-body-sm text-ink-muted px-sm py-xs rounded-md hover:text-ink">로그아웃</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-3xl w-full mx-auto px-lg py-xxl flex flex-col gap-xl justify-center">
+    <section class="bg-surface-1 border border-hairline rounded-xl p-xl md:p-xxl flex flex-col gap-xl">
+      <!-- 1. 완료 메시지 -->
+      <div class="flex flex-col gap-sm">
+        <div class="w-10 h-10 rounded-full bg-primary text-on-primary inline-flex items-center justify-center">
+          <span class="material-symbols-outlined text-subhead" aria-hidden="true">check</span>
+        </div>
+        <h1 data-design-text-token="display-md" class="font-display text-display-md-mobile md:text-display-md text-ink">지원이 완료되었습니다</h1>
+        <p data-design-text-token="body-lg" class="font-body text-body-lg text-ink-muted">
+          서류 심사 결과는 등록된 이메일과 마이페이지에서 안내합니다.
+        </p>
+      </div>
+
+      <!-- 2. 지원 요약 -->
+      <div class="bg-canvas border border-hairline-soft rounded-lg p-lg grid grid-cols-1 md:grid-cols-3 gap-md">
+        <div class="flex flex-col gap-xxs">
+          <span data-design-text-token="caption" class="font-caption text-caption text-ink-muted">지원 과정</span>
+          <span data-design-text-token="button" class="font-button text-button text-ink">백엔드 자바 스프링 부트캠프</span>
+        </div>
+        <div class="flex flex-col gap-xxs">
+          <span data-design-text-token="caption" class="font-caption text-caption text-ink-muted">지원 기수</span>
+          <span data-design-text-token="button" class="font-button text-button text-ink">12기</span>
+        </div>
+        <div class="flex flex-col gap-xxs">
+          <span data-design-text-token="caption" class="font-caption text-caption text-ink-muted">지원일</span>
+          <span data-design-text-token="button" class="font-button text-button text-ink tabular-nums">2026.11.24</span>
+        </div>
+      </div>
+
+      <!-- 3. 진행 단계 -->
+      <div class="flex flex-col gap-sm">
+        <span data-design-text-token="eyebrow" class="font-eyebrow text-eyebrow text-ink-muted">선발 진행 단계</span>
+        <div class="grid grid-cols-5 gap-xs">
+          <div class="bg-primary text-on-primary rounded-md p-sm flex flex-col gap-xxs">
+            <span data-design-text-token="mono" class="font-mono text-mono opacity-80">01</span>
+            <span data-design-text-token="caption" class="font-caption text-caption">지원 완료</span>
+          </div>
+          <div class="bg-canvas border border-hairline rounded-md p-sm flex flex-col gap-xxs">
+            <span data-design-text-token="mono" class="font-mono text-mono text-ink-muted">02</span>
+            <span data-design-text-token="caption" class="font-caption text-caption text-ink-muted">서류 심사</span>
+          </div>
+          <div class="bg-canvas border border-hairline rounded-md p-sm flex flex-col gap-xxs">
+            <span data-design-text-token="mono" class="font-mono text-mono text-ink-muted">03</span>
+            <span data-design-text-token="caption" class="font-caption text-caption text-ink-muted">합격 발표</span>
+          </div>
+          <div class="bg-canvas border border-hairline rounded-md p-sm flex flex-col gap-xxs">
+            <span data-design-text-token="mono" class="font-mono text-mono text-ink-muted">04</span>
+            <span data-design-text-token="caption" class="font-caption text-caption text-ink-muted">결제</span>
+          </div>
+          <div class="bg-canvas border border-hairline rounded-md p-sm flex flex-col gap-xxs">
+            <span data-design-text-token="mono" class="font-mono text-mono text-ink-muted">05</span>
+            <span data-design-text-token="caption" class="font-caption text-caption text-ink-muted">수강 확정</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. 버튼 -->
+      <div class="flex flex-wrap items-center gap-sm pt-sm border-t border-hairline-soft">
+        <a href="/my" data-component-id="button-primary" data-component-type="button" data-component-variant="primary" class="inline-flex items-center justify-center bg-primary text-on-primary font-button text-button px-md py-sm min-h-10 rounded-md hover:opacity-90">
+          <span data-design-text-token="button">지원 현황 보기</span>
+        </a>
+        <a href="/" data-component-id="button-secondary" data-component-type="button" data-component-variant="secondary" class="inline-flex items-center justify-center bg-surface-1 text-ink border border-hairline font-button text-button px-md py-sm min-h-10 rounded-md hover:bg-surface-2">
+          <span data-design-text-token="button">메인으로</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-canvas border-t border-hairline">
+    <div class="max-w-[1280px] mx-auto px-lg py-xxl flex flex-col md:flex-row justify-between gap-xl">
+      <div class="flex flex-col gap-sm">
+        <span data-design-text-token="button" class="font-button text-button text-ink">커리어랩</span>
+        <p data-design-text-token="caption" class="font-caption text-caption text-ink-muted">주식회사 커리어랩 · 대표 김태현 · 고객센터 02-6410-8200</p>
+      </div>
+      <div class="flex flex-wrap items-center gap-lg">
+        <a href="/terms" data-design-text-token="caption" class="font-caption text-caption text-ink-muted hover:text-ink">이용약관</a>
+        <a href="/privacy" data-design-text-token="caption" class="font-caption text-caption text-ink-muted hover:text-ink">개인정보처리방침</a>
+        <a href="/refund" data-design-text-token="caption" class="font-caption text-caption text-ink-muted hover:text-ink">환불 규정</a>
+      </div>
+    </div>
+  </footer>
+
+
+</body></html>

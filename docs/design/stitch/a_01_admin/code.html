@@ -1,0 +1,240 @@
+<!DOCTYPE html><html lang="ko"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>관리자 대시보드 — 커리어랩</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'canvas': '#f5f1ec',
+        'on-canvas': '#111111',
+        'surface-1': '#ffffff',
+        'on-surface-1': '#111111',
+        'surface-2': '#ebe5dd',
+        'on-surface-2': '#111111',
+        'primary': '#111111',
+        'on-primary': '#ffffff',
+        'fin-orange': '#ff5600',
+        'ink': '#111111',
+        'ink-muted': '#626260',
+        'ink-subtle': '#7b7b78',
+        'ink-tertiary': '#9c9fa5',
+        'hairline': '#d3cec6',
+        'hairline-soft': '#e5e0d8',
+        'inverse-canvas': '#000000',
+        'inverse-ink': '#ffffff',
+        'inverse-ink-muted': '#a3a3a3',
+        'semantic-error': '#dc2626',
+        'semantic-success': '#15803d',
+        'report-blue': '#2563eb',
+        'report-green': '#16a34a',
+        'report-pink': '#db2777',
+        'report-lime': '#65a30d',
+        'report-orange': '#f97316',
+        'brand-blue': '#0007cb',
+      },
+      borderRadius: {
+        'xs': '4px',
+        'sm': '6px',
+        'md': '8px',
+        'lg': '12px',
+        'xl': '16px',
+        'xxl': '24px',
+        'pill': '9999px',
+        'full': '9999px',
+      },
+      spacing: {
+        'xxs': '4px',
+        'xs': '8px',
+        'sm': '12px',
+        'md': '16px',
+        'lg': '24px',
+        'xl': '32px',
+        'xxl': '48px',
+        'section': '96px',
+      },
+      fontFamily: {
+        'display': ['"Inter"', 'sans-serif'],
+        'headline': ['"Inter"', 'sans-serif'],
+        'card': ['"Inter"', 'sans-serif'],
+        'subhead': ['"Inter"', 'sans-serif'],
+        'body': ['"Inter"', 'sans-serif'],
+        'caption': ['"Inter"', 'sans-serif'],
+        'button': ['"Inter"', 'sans-serif'],
+        'eyebrow': ['"Inter"', 'sans-serif'],
+        'mono': ['"JetBrains Mono"', 'monospace'],
+      },
+      fontSize: {
+        'display-xl': ['72px', { lineHeight: '76px', letterSpacing: '-2.0px', fontWeight: '500' }],
+        'display-xl-mobile': ['32px', { lineHeight: '36px', letterSpacing: '-0.8px', fontWeight: '500' }],
+        'display-lg': ['56px', { lineHeight: '62px', letterSpacing: '-1.4px', fontWeight: '500' }],
+        'display-lg-mobile': ['30px', { lineHeight: '34px', letterSpacing: '-0.6px', fontWeight: '500' }],
+        'display-md': ['40px', { lineHeight: '46px', letterSpacing: '-0.8px', fontWeight: '500' }],
+        'display-md-mobile': ['28px', { lineHeight: '33px', letterSpacing: '-0.4px', fontWeight: '500' }],
+        'headline': ['28px', { lineHeight: '34px', letterSpacing: '-0.5px', fontWeight: '500' }],
+        'card-title': ['22px', { lineHeight: '28px', letterSpacing: '-0.3px', fontWeight: '500' }],
+        'subhead': ['20px', { lineHeight: '28px', letterSpacing: '-0.2px', fontWeight: '400' }],
+        'body-lg': ['18px', { lineHeight: '27px', letterSpacing: '-0.1px', fontWeight: '400' }],
+        'body': ['16px', { lineHeight: '24px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-sm': ['14px', { lineHeight: '21px', letterSpacing: '0px', fontWeight: '400' }],
+        'caption': ['12px', { lineHeight: '17px', letterSpacing: '0px', fontWeight: '400' }],
+        'button': ['15px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '500' }],
+        'eyebrow': ['14px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '500' }],
+        'mono': ['13px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '400' }],
+      },
+      transitionDuration: {
+        'state-change': '100ms',
+        'surface-enter': '200ms',
+        'surface-exit': '150ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 0, 1)',
+        'surface-exit': 'cubic-bezier(0.3, 0, 1, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet">
+  <style>.material-symbols-outlined, .material-symbols-rounded, .material-symbols-sharp, .material-icons { display: inline-block; width: 1em; height: 1em; line-height: 1 !important; box-sizing: content-box; overflow: hidden; white-space: nowrap; direction: ltr; vertical-align: middle; }</style>
+</head>
+<body class="bg-canvas text-ink font-body antialiased min-h-[1024px] flex" data-stitch-vh="min-h-[1024px]===min-h-screen">
+
+  <!-- Admin Sidebar -->
+  <aside class="w-60 shrink-0 bg-surface-1 border-r border-hairline min-h-[1024px] flex flex-col justify-between p-lg" data-stitch-vh="min-h-[1024px]===min-h-screen">
+    <div class="flex flex-col gap-xl">
+      <a href="/admin" class="inline-flex items-center gap-xs text-ink">
+        <span class="w-6 h-6 rounded-xs bg-primary text-on-primary inline-flex items-center justify-center font-mono text-caption">C</span>
+        <span data-design-text-token="button" class="font-button text-button text-ink">커리어랩</span>
+        <span data-design-text-token="caption" class="font-caption text-caption bg-surface-2 text-ink-muted px-xs py-xxs rounded-xs">관리자</span>
+      </a>
+      <nav aria-label="관리자 메뉴" class="flex flex-col gap-xxs">
+        <a href="/admin" data-design-text-token="body-sm" class="bg-surface-2 text-ink font-body text-body-sm px-sm py-sm rounded-md">대시보드</a>
+        <a href="/admin/courses" data-design-text-token="body-sm" class="text-ink-muted font-body text-body-sm px-sm py-sm rounded-md hover:text-ink hover:bg-canvas">과정 관리</a>
+        <a href="/admin/cohorts" data-design-text-token="body-sm" class="text-ink-muted font-body text-body-sm px-sm py-sm rounded-md hover:text-ink hover:bg-canvas">기수 관리</a>
+        <a href="/admin/cohorts/12/applications" data-design-text-token="body-sm" class="text-ink-muted font-body text-body-sm px-sm py-sm rounded-md hover:text-ink hover:bg-canvas">지원자 심사</a>
+        <a href="/admin/payments" data-design-text-token="body-sm" class="text-ink-muted font-body text-body-sm px-sm py-sm rounded-md hover:text-ink hover:bg-canvas">결제·환불 관리</a>
+      </nav>
+    </div>
+    <div class="pt-md border-t border-hairline-soft flex items-center justify-between">
+      <span data-design-text-token="body-sm" class="font-body text-body-sm text-ink">운영자 김민수</span>
+      <a href="/logout" data-design-text-token="caption" class="font-caption text-caption text-ink-muted hover:text-ink">로그아웃</a>
+    </div>
+  </aside>
+
+  <main class="flex-1 p-xl flex flex-col gap-xl min-w-0">
+    <h1 data-design-text-token="display-md" class="font-display text-display-md-mobile md:text-display-md text-ink">대시보드</h1>
+
+    <!-- 1. 요약 카드 4개 -->
+    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-md">
+      <a href="/admin/cohorts" class="bg-surface-1 border border-hairline rounded-lg p-lg flex flex-col gap-xs hover:border-ink transition-colors duration-state-change">
+        <span data-design-text-token="caption" class="font-caption text-caption text-ink-muted">모집 중 기수</span>
+        <span data-design-text-token="display-md" class="font-display text-display-md text-ink tabular-nums">4</span>
+      </a>
+      <a href="/admin/cohorts/12/applications" class="bg-surface-1 border border-hairline rounded-lg p-lg flex flex-col gap-xs hover:border-ink transition-colors duration-state-change">
+        <span data-design-text-token="caption" class="font-caption text-caption text-ink-muted">심사 대기</span>
+        <span data-design-text-token="display-md" class="font-display text-display-md text-ink tabular-nums">28</span>
+      </a>
+      <a href="/admin/cohorts/12/applications" class="bg-surface-1 border border-hairline rounded-lg p-lg flex flex-col gap-xs hover:border-ink transition-colors duration-state-change">
+        <span data-design-text-token="caption" class="font-caption text-caption text-ink-muted">결제 대기</span>
+        <span data-design-text-token="display-md" class="font-display text-display-md text-ink tabular-nums">11</span>
+      </a>
+      <a href="/admin/payments" class="bg-surface-1 border border-hairline rounded-lg p-lg flex flex-col gap-xs hover:border-ink transition-colors duration-state-change">
+        <span data-design-text-token="caption" class="font-caption text-caption text-ink-muted">이번 주 환불 요청</span>
+        <span data-design-text-token="display-md" class="font-display text-display-md text-ink tabular-nums">2</span>
+      </a>
+    </section>
+
+    <!-- 2. 모집 중 기수 -->
+    <section class="flex flex-col gap-md">
+      <h2 data-design-text-token="headline" class="font-headline text-headline text-ink">모집 중 기수</h2>
+      <div class="bg-surface-1 border border-hairline rounded-xl overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-hairline bg-canvas">
+              <th class="px-lg py-sm font-caption text-caption text-ink-muted">과정·기수</th>
+              <th class="px-lg py-sm font-caption text-caption text-ink-muted">모집 마감</th>
+              <th class="px-lg py-sm font-caption text-caption text-ink-muted">지원</th>
+              <th class="px-lg py-sm font-caption text-caption text-ink-muted">합격</th>
+              <th class="px-lg py-sm font-caption text-caption text-ink-muted">확정 / 정원</th>
+              <th class="px-lg py-sm font-caption text-caption text-ink-muted text-right">관리</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-hairline-soft">
+            <tr>
+              <td class="px-lg py-md font-body text-body-sm text-ink">백엔드 12기</td>
+              <td class="px-lg py-md font-body text-body-sm text-ink-muted tabular-nums">2026.12.15</td>
+              <td class="px-lg py-md font-body text-body-sm text-ink tabular-nums">42</td>
+              <td class="px-lg py-md font-body text-body-sm text-ink tabular-nums">28</td>
+              <td class="px-lg py-md font-body text-body-sm text-ink tabular-nums">22 / 30</td>
+              <td class="px-lg py-md text-right">
+                <a href="/admin/cohorts/12/applications" class="inline-flex items-center justify-center bg-primary text-on-primary font-caption text-caption px-sm py-xs rounded-md hover:opacity-90">심사하기</a>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-lg py-md font-body text-body-sm text-ink">프론트엔드 9기</td>
+              <td class="px-lg py-md font-body text-body-sm text-ink-muted tabular-nums">2026.12.20</td>
+              <td class="px-lg py-md font-body text-body-sm text-ink tabular-nums">36</td>
+              <td class="px-lg py-md font-body text-body-sm text-ink tabular-nums">24</td>
+              <td class="px-lg py-md font-body text-body-sm text-ink tabular-nums">18 / 30</td>
+              <td class="px-lg py-md text-right">
+                <a href="/admin/cohorts/9/applications" class="inline-flex items-center justify-center bg-primary text-on-primary font-caption text-caption px-sm py-xs rounded-md hover:opacity-90">심사하기</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 3. 최근 결제 -->
+    <section class="flex flex-col gap-md">
+      <div class="flex items-center justify-between">
+        <h2 data-design-text-token="headline" class="font-headline text-headline text-ink">최근 결제</h2>
+        <a href="/admin/payments" data-design-text-token="body-sm" class="font-body text-body-sm text-ink-muted hover:text-ink">전체 보기</a>
+      </div>
+      <div class="bg-surface-1 border border-hairline rounded-xl overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-hairline bg-canvas">
+              <th class="px-lg py-sm font-caption text-caption text-ink-muted">주문번호</th>
+              <th class="px-lg py-sm font-caption text-caption text-ink-muted">회원</th>
+              <th class="px-lg py-sm font-caption text-caption text-ink-muted">과정·기수</th>
+              <th class="px-lg py-sm font-caption text-caption text-ink-muted">금액</th>
+              <th class="px-lg py-sm font-caption text-caption text-ink-muted">결제일</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-hairline-soft">
+            <tr>
+              <td class="px-lg py-md font-mono text-mono text-ink tabular-nums">ORD-20261124-0102</td>
+              <td class="px-lg py-md font-body text-body-sm text-ink">박하늘</td>
+              <td class="px-lg py-md font-body text-body-sm text-ink">프론트엔드 9기</td>
+              <td class="px-lg py-md font-body text-body-sm text-ink tabular-nums">3,800,000원</td>
+              <td class="px-lg py-md font-body text-body-sm text-ink-muted tabular-nums">2026.11.24</td>
+            </tr>
+            <tr>
+              <td class="px-lg py-md font-mono text-mono text-ink tabular-nums">ORD-20261123-0098</td>
+              <td class="px-lg py-md font-body text-body-sm text-ink">정우성</td>
+              <td class="px-lg py-md font-body text-body-sm text-ink">백엔드 12기</td>
+              <td class="px-lg py-md font-body text-body-sm text-ink tabular-nums">4,200,000원</td>
+              <td class="px-lg py-md font-body text-body-sm text-ink-muted tabular-nums">2026.11.23</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+
+</body></html>

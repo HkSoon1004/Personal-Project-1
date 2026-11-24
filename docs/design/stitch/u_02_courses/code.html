@@ -1,0 +1,345 @@
+<!DOCTYPE html><html lang="ko"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>과정 목록 — 커리어랩</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'canvas': '#f5f1ec',
+        'on-canvas': '#111111',
+        'surface-1': '#ffffff',
+        'on-surface-1': '#111111',
+        'surface-2': '#ebe5dd',
+        'on-surface-2': '#111111',
+        'primary': '#111111',
+        'on-primary': '#ffffff',
+        'fin-orange': '#ff5600',
+        'ink': '#111111',
+        'ink-muted': '#626260',
+        'ink-subtle': '#7b7b78',
+        'ink-tertiary': '#9c9fa5',
+        'hairline': '#d3cec6',
+        'hairline-soft': '#e5e0d8',
+        'inverse-canvas': '#000000',
+        'inverse-ink': '#ffffff',
+        'inverse-ink-muted': '#a3a3a3',
+        'semantic-error': '#dc2626',
+        'semantic-success': '#15803d',
+        'report-blue': '#2563eb',
+        'report-green': '#16a34a',
+        'report-pink': '#db2777',
+        'report-lime': '#65a30d',
+        'report-orange': '#f97316',
+        'brand-blue': '#0007cb',
+      },
+      borderRadius: {
+        'xs': '4px',
+        'sm': '6px',
+        'md': '8px',
+        'lg': '12px',
+        'xl': '16px',
+        'xxl': '24px',
+        'pill': '9999px',
+        'full': '9999px',
+      },
+      spacing: {
+        'xxs': '4px',
+        'xs': '8px',
+        'sm': '12px',
+        'md': '16px',
+        'lg': '24px',
+        'xl': '32px',
+        'xxl': '48px',
+        'section': '96px',
+      },
+      fontFamily: {
+        'display': ['"Inter"', 'sans-serif'],
+        'headline': ['"Inter"', 'sans-serif'],
+        'card': ['"Inter"', 'sans-serif'],
+        'subhead': ['"Inter"', 'sans-serif'],
+        'body': ['"Inter"', 'sans-serif'],
+        'caption': ['"Inter"', 'sans-serif'],
+        'button': ['"Inter"', 'sans-serif'],
+        'eyebrow': ['"Inter"', 'sans-serif'],
+        'mono': ['"JetBrains Mono"', 'monospace'],
+      },
+      fontSize: {
+        'display-xl': ['72px', { lineHeight: '76px', letterSpacing: '-2.0px', fontWeight: '500' }],
+        'display-xl-mobile': ['32px', { lineHeight: '36px', letterSpacing: '-0.8px', fontWeight: '500' }],
+        'display-lg': ['56px', { lineHeight: '62px', letterSpacing: '-1.4px', fontWeight: '500' }],
+        'display-lg-mobile': ['30px', { lineHeight: '34px', letterSpacing: '-0.6px', fontWeight: '500' }],
+        'display-md': ['40px', { lineHeight: '46px', letterSpacing: '-0.8px', fontWeight: '500' }],
+        'display-md-mobile': ['28px', { lineHeight: '33px', letterSpacing: '-0.4px', fontWeight: '500' }],
+        'headline': ['28px', { lineHeight: '34px', letterSpacing: '-0.5px', fontWeight: '500' }],
+        'card-title': ['22px', { lineHeight: '28px', letterSpacing: '-0.3px', fontWeight: '500' }],
+        'subhead': ['20px', { lineHeight: '28px', letterSpacing: '-0.2px', fontWeight: '400' }],
+        'body-lg': ['18px', { lineHeight: '27px', letterSpacing: '-0.1px', fontWeight: '400' }],
+        'body': ['16px', { lineHeight: '24px', letterSpacing: '0px', fontWeight: '400' }],
+        'body-sm': ['14px', { lineHeight: '21px', letterSpacing: '0px', fontWeight: '400' }],
+        'caption': ['12px', { lineHeight: '17px', letterSpacing: '0px', fontWeight: '400' }],
+        'button': ['15px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '500' }],
+        'eyebrow': ['14px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '500' }],
+        'mono': ['13px', { lineHeight: '20px', letterSpacing: '0px', fontWeight: '400' }],
+      },
+      transitionDuration: {
+        'state-change': '100ms',
+        'surface-enter': '200ms',
+        'surface-exit': '150ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'surface-enter': '0ms',
+        'surface-exit': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'ease-out',
+        'surface-enter': 'cubic-bezier(0.2, 0, 0, 1)',
+        'surface-exit': 'cubic-bezier(0.3, 0, 1, 1)',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet">
+  <style>.material-symbols-outlined, .material-symbols-rounded, .material-symbols-sharp, .material-icons { display: inline-block; width: 1em; height: 1em; line-height: 1 !important; box-sizing: content-box; overflow: hidden; white-space: nowrap; direction: ltr; vertical-align: middle; }</style>
+</head>
+<body class="bg-canvas text-ink font-body antialiased min-h-[1024px] flex flex-col" data-stitch-vh="min-h-[1024px]===min-h-screen">
+
+  <!-- GNB -->
+  <header class="sticky top-0 z-30 bg-canvas border-b border-hairline-soft">
+    <div class="max-w-[1280px] mx-auto px-lg h-14 flex items-center justify-between gap-lg">
+      <div class="flex items-center gap-xxl">
+        <a href="/" class="inline-flex items-center gap-xs text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xs">
+          <span class="w-6 h-6 rounded-xs bg-primary text-on-primary inline-flex items-center justify-center font-mono text-caption">C</span>
+          <span data-design-text-token="button" class="font-button text-button text-ink">커리어랩</span>
+        </a>
+        <nav aria-label="주 메뉴" class="hidden md:flex items-center gap-lg">
+          <a href="/courses" data-design-text-token="body-sm" class="font-body text-body-sm text-ink underline underline-offset-4">과정</a>
+          <a href="#briefing" data-design-text-token="body-sm" class="inline-flex items-center gap-xs font-body text-body-sm text-ink-muted hover:text-ink transition-colors duration-state-change">
+            <span>설명회</span>
+            <span data-design-text-token="caption" class="font-caption text-caption bg-surface-2 text-ink-muted px-xs py-xxs rounded-xs">준비중</span>
+          </a>
+        </nav>
+      </div>
+      <div class="flex items-center gap-sm">
+        <a href="/login" data-design-text-token="body-sm" class="font-body text-body-sm text-ink px-sm py-xs rounded-md hover:bg-surface-2 transition-colors duration-state-change">로그인</a>
+        <a href="/signup" data-component-id="button-primary" data-component-type="button" data-component-variant="primary" class="inline-flex items-center justify-center bg-primary text-on-primary font-button text-button px-md py-sm min-h-10 rounded-md hover:opacity-90 transition-colors duration-state-change">
+          <span data-design-text-token="button">회원가입</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-[1280px] w-full mx-auto px-lg py-xxl">
+    <div class="flex flex-col gap-xs mb-xl">
+      <span data-design-text-token="eyebrow" class="font-eyebrow text-eyebrow text-ink-muted">전체 커리큘럼</span>
+      <h1 data-design-text-token="display-lg" class="font-display text-display-lg-mobile md:text-display-lg text-ink">전체 과정</h1>
+    </div>
+
+    <!-- 1. Category Filter Tabs -->
+    <div data-component-id="tabs-horizontal" data-component-type="tabs" data-component-variant="horizontal" class="mb-xl">
+      <div role="tablist" aria-label="과정 분야 필터" class="inline-flex flex-wrap items-center gap-xs bg-surface-2 p-xxs rounded-pill">
+        <button role="tab" aria-selected="true" class="bg-surface-1 text-ink font-button text-button px-md py-xs min-h-10 rounded-pill">
+          <span data-design-text-token="button">전체</span>
+        </button>
+        <button role="tab" aria-selected="false" class="bg-transparent text-ink-muted font-button text-button px-md py-xs min-h-10 rounded-pill hover:text-ink">
+          <span data-design-text-token="button">백엔드</span>
+        </button>
+        <button role="tab" aria-selected="false" class="bg-transparent text-ink-muted font-button text-button px-md py-xs min-h-10 rounded-pill hover:text-ink">
+          <span data-design-text-token="button">프론트엔드</span>
+        </button>
+        <button role="tab" aria-selected="false" class="bg-transparent text-ink-muted font-button text-button px-md py-xs min-h-10 rounded-pill hover:text-ink">
+          <span data-design-text-token="button">UI/UX 디자인</span>
+        </button>
+        <button role="tab" aria-selected="false" class="bg-transparent text-ink-muted font-button text-button px-md py-xs min-h-10 rounded-pill hover:text-ink">
+          <span data-design-text-token="button">PM</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 2. Course Cards 3-col Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg items-stretch">
+      <!-- Card 1 -->
+      <a href="/courses/backend-spring-12" data-component-id="card-interactive" data-component-type="card" data-component-variant="interactive" class="h-full bg-surface-1 text-ink border border-hairline rounded-lg p-lg flex flex-col justify-between gap-lg hover:border-ink transition-colors duration-state-change">
+        <div class="flex flex-col gap-sm">
+          <div class="flex items-center justify-between gap-xs">
+            <span data-design-text-token="caption" class="font-caption text-caption bg-surface-2 text-ink px-sm py-xxs rounded-xs">백엔드</span>
+            <span class="inline-flex items-center gap-xs">
+              <span class="w-2 h-2 rounded-full bg-semantic-success" aria-hidden="true"></span>
+              <span data-design-text-token="caption" class="font-caption text-caption text-ink">모집중</span>
+            </span>
+          </div>
+          <h2 data-design-text-token="card-title" class="font-card text-card-title text-ink">자바 스프링 부트캠프</h2>
+          <p data-design-text-token="body-sm" class="font-body text-body-sm text-ink-muted">대용량 트래픽 처리와 MSA 설계까지 실무 백엔드 아키텍처를 완성합니다.</p>
+        </div>
+        <div class="flex flex-col gap-xs pt-md border-t border-hairline-soft">
+          <div class="flex items-center justify-between">
+            <span data-design-text-token="caption" class="font-caption text-caption text-ink-muted">다음 기수 (12기)</span>
+            <span data-design-text-token="body-sm" class="font-body text-body-sm text-ink tabular-nums">2027.01.04 개강</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span data-design-text-token="caption" class="font-caption text-caption text-ink-muted">수강료</span>
+            <span data-design-text-token="button" class="font-button text-button text-ink tabular-nums">4,200,000원</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Card 2 -->
+      <a href="/courses/frontend-react-09" data-component-id="card-interactive" data-component-type="card" data-component-variant="interactive" class="h-full bg-surface-1 text-ink border border-hairline rounded-lg p-lg flex flex-col justify-between gap-lg hover:border-ink transition-colors duration-state-change">
+        <div class="flex flex-col gap-sm">
+          <div class="flex items-center justify-between gap-xs">
+            <span data-design-text-token="caption" class="font-caption text-caption bg-surface-2 text-ink px-sm py-xxs rounded-xs">프론트엔드</span>
+            <span class="inline-flex items-center gap-xs">
+              <span class="w-2 h-2 rounded-full bg-semantic-success" aria-hidden="true"></span>
+              <span data-design-text-token="caption" class="font-caption text-caption text-ink">모집중</span>
+            </span>
+          </div>
+          <h2 data-design-text-token="card-title" class="font-card text-card-title text-ink">React &amp; TS 부트캠프</h2>
+          <p data-design-text-token="body-sm" class="font-body text-body-sm text-ink-muted">상태 관리, 성능 최적화, 디자인 시스템 구축까지 실전 웹 엔지니어링.</p>
+        </div>
+        <div class="flex flex-col gap-xs pt-md border-t border-hairline-soft">
+          <div class="flex items-center justify-between">
+            <span data-design-text-token="caption" class="font-caption text-caption text-ink-muted">다음 기수 (9기)</span>
+            <span data-design-text-token="body-sm" class="font-body text-body-sm text-ink tabular-nums">2027.01.11 개강</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span data-design-text-token="caption" class="font-caption text-caption text-ink-muted">수강료</span>
+            <span data-design-text-token="button" class="font-button text-button text-ink tabular-nums">3,800,000원</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Card 3 -->
+      <a href="/courses/uiux-design-07" data-component-id="card-interactive" data-component-type="card" data-component-variant="interactive" class="h-full bg-surface-1 text-ink border border-hairline rounded-lg p-lg flex flex-col justify-between gap-lg hover:border-ink transition-colors duration-state-change">
+        <div class="flex flex-col gap-sm">
+          <div class="flex items-center justify-between gap-xs">
+            <span data-design-text-token="caption" class="font-caption text-caption bg-surface-2 text-ink px-sm py-xxs rounded-xs">UI/UX 디자인</span>
+            <span class="inline-flex items-center gap-xs">
+              <span class="w-2 h-2 rounded-full bg-semantic-success" aria-hidden="true"></span>
+              <span data-design-text-token="caption" class="font-caption text-caption text-ink">모집중</span>
+            </span>
+          </div>
+          <h2 data-design-text-token="card-title" class="font-card text-card-title text-ink">프로덕트 디자인 과정</h2>
+          <p data-design-text-token="body-sm" class="font-body text-body-sm text-ink-muted">문제 정의부터 디자인 시스템, 개발 협업까지 실무 포트폴리오 완성.</p>
+        </div>
+        <div class="flex flex-col gap-xs pt-md border-t border-hairline-soft">
+          <div class="flex items-center justify-between">
+            <span data-design-text-token="caption" class="font-caption text-caption text-ink-muted">다음 기수 (7기)</span>
+            <span data-design-text-token="body-sm" class="font-body text-body-sm text-ink tabular-nums">2027.01.18 개강</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span data-design-text-token="caption" class="font-caption text-caption text-ink-muted">수강료</span>
+            <span data-design-text-token="button" class="font-button text-button text-ink tabular-nums">3,600,000원</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Card 4 -->
+      <a href="/courses/pm-product-06" data-component-id="card-interactive" data-component-type="card" data-component-variant="interactive" class="h-full bg-surface-1 text-ink border border-hairline rounded-lg p-lg flex flex-col justify-between gap-lg hover:border-ink transition-colors duration-state-change">
+        <div class="flex flex-col gap-sm">
+          <div class="flex items-center justify-between gap-xs">
+            <span data-design-text-token="caption" class="font-caption text-caption bg-surface-2 text-ink px-sm py-xxs rounded-xs">PM</span>
+            <span class="inline-flex items-center gap-xs">
+              <span class="w-2 h-2 rounded-full bg-semantic-success" aria-hidden="true"></span>
+              <span data-design-text-token="caption" class="font-caption text-caption text-ink">모집중</span>
+            </span>
+          </div>
+          <h2 data-design-text-token="card-title" class="font-card text-card-title text-ink">IT 프로덕트 매니저</h2>
+          <p data-design-text-token="body-sm" class="font-body text-body-sm text-ink-muted">데이터 기반 가설 검증과 PRD 작성, 팀 프로젝트 리딩을 경험합니다.</p>
+        </div>
+        <div class="flex flex-col gap-xs pt-md border-t border-hairline-soft">
+          <div class="flex items-center justify-between">
+            <span data-design-text-token="caption" class="font-caption text-caption text-ink-muted">다음 기수 (6기)</span>
+            <span data-design-text-token="body-sm" class="font-body text-body-sm text-ink tabular-nums">2027.01.25 개강</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span data-design-text-token="caption" class="font-caption text-caption text-ink-muted">수강료</span>
+            <span data-design-text-token="button" class="font-button text-button text-ink tabular-nums">3,400,000원</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Card 5 (모집예정) -->
+      <a href="/courses/backend-node-04" data-component-id="card-interactive" data-component-type="card" data-component-variant="interactive" class="h-full bg-surface-1 text-ink border border-hairline rounded-lg p-lg flex flex-col justify-between gap-lg hover:border-ink transition-colors duration-state-change">
+        <div class="flex flex-col gap-sm">
+          <div class="flex items-center justify-between gap-xs">
+            <span data-design-text-token="caption" class="font-caption text-caption bg-surface-2 text-ink px-sm py-xxs rounded-xs">백엔드</span>
+            <span class="inline-flex items-center gap-xs">
+              <span class="w-2 h-2 rounded-full bg-fin-orange" aria-hidden="true"></span>
+              <span data-design-text-token="caption" class="font-caption text-caption text-ink">모집예정</span>
+            </span>
+          </div>
+          <h2 data-design-text-token="card-title" class="font-card text-card-title text-ink">Node.js &amp; NestJS 실무</h2>
+          <p data-design-text-token="body-sm" class="font-body text-body-sm text-ink-muted text-balance">TypeScript 기반 확장 가능한 API 서버와 실시간 이벤트 처리.</p>
+        </div>
+        <div class="flex flex-col gap-xs pt-md border-t border-hairline-soft">
+          <div class="flex items-center justify-between">
+            <span data-design-text-token="caption" class="font-caption text-caption text-ink-muted">다음 기수 (4기)</span>
+            <span data-design-text-token="body-sm" class="font-body text-body-sm text-ink tabular-nums">2027.02.15 개강</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span data-design-text-token="caption" class="font-caption text-caption text-ink-muted">수강료</span>
+            <span data-design-text-token="button" class="font-button text-button text-ink tabular-nums">3,900,000원</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Card 6 (마감) -->
+      <a href="/courses/frontend-next-08" data-component-id="card-interactive" data-component-type="card" data-component-variant="interactive" class="h-full bg-surface-1 text-ink border border-hairline rounded-lg p-lg flex flex-col justify-between gap-lg hover:border-ink transition-colors duration-state-change">
+        <div class="flex flex-col gap-sm">
+          <div class="flex items-center justify-between gap-xs">
+            <span data-design-text-token="caption" class="font-caption text-caption bg-surface-2 text-ink px-sm py-xxs rounded-xs">프론트엔드</span>
+            <span class="inline-flex items-center gap-xs">
+              <span class="w-2 h-2 rounded-full bg-ink-tertiary" aria-hidden="true"></span>
+              <span data-design-text-token="caption" class="font-caption text-caption text-ink-muted">모집 마감</span>
+            </span>
+          </div>
+          <h2 data-design-text-token="card-title" class="font-card text-card-title text-ink">Next.js 풀스택 트랙</h2>
+          <p data-design-text-token="body-sm" class="font-body text-body-sm text-ink-muted">서버 컴포넌트와 엣지 렌더링 기반 프로덕션 웹 애플리케이션 구축.</p>
+        </div>
+        <div class="flex flex-col gap-xs pt-md border-t border-hairline-soft">
+          <div class="flex items-center justify-between">
+            <span data-design-text-token="caption" class="font-caption text-caption text-ink-muted">8기 (정원 마감)</span>
+            <span data-design-text-token="body-sm" class="font-body text-body-sm text-ink-muted tabular-nums">2026.12.01 개강</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span data-design-text-token="caption" class="font-caption text-caption text-ink-muted">수강료</span>
+            <span data-design-text-token="button" class="font-button text-button text-ink tabular-nums">4,000,000원</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-canvas border-t border-hairline">
+    <div class="max-w-[1280px] mx-auto px-lg py-xxl flex flex-col md:flex-row justify-between gap-xl">
+      <div class="flex flex-col gap-sm">
+        <div class="inline-flex items-center gap-xs">
+          <span class="w-5 h-5 rounded-xs bg-primary text-on-primary inline-flex items-center justify-center font-mono text-caption">C</span>
+          <span data-design-text-token="button" class="font-button text-button text-ink">커리어랩</span>
+        </div>
+        <p data-design-text-token="caption" class="font-caption text-caption text-ink-muted">
+          주식회사 커리어랩 · 대표 김태현 · 사업자등록번호 211-88-94510 · 원격평생교육시설 신고번호 제2026-서울강남-0184호
+        </p>
+        <p data-design-text-token="caption" class="font-caption text-caption text-ink-muted tabular-nums">
+          고객센터 02-6410-8200 (평일 10:00 ~ 18:00 KST)
+        </p>
+      </div>
+      <div class="flex flex-wrap items-center gap-lg">
+        <a href="/terms" data-design-text-token="caption" class="font-caption text-caption text-ink-muted hover:text-ink">이용약관</a>
+        <a href="/privacy" data-design-text-token="caption" class="font-caption text-caption text-ink-muted hover:text-ink">개인정보처리방침</a>
+        <a href="/refund" data-design-text-token="caption" class="font-caption text-caption text-ink-muted hover:text-ink">환불 규정</a>
+      </div>
+    </div>
+  </footer>
+
+
+</body></html>

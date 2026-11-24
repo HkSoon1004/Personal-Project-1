@@ -19,7 +19,7 @@
 | 백엔드 | Java 21, Gradle — **Spring 미사용 결정(2026-11-24)**. HTTP 서버·JSON·인증 방식은 미정이며, 이 표의 다른 Spring 관련 항목과 아래 컨벤션도 확정 후 갱신한다 |
 | DB | MySQL 8, JDBC 직접 사용(ORM 없음), HikariCP, Flyway (테스트: Testcontainers). 상세는 `docs/db-design.md` |
 | 캐시·락 | Redis (2차부터) |
-| 프론트엔드 | React, Vite, React Router, TanStack Query (TypeScript 선택) |
+| 프론트엔드 | React 19, Vite, TypeScript, React Router, Tailwind CSS v3 (디자인 토큰은 Stitch 시안에서 가져옴), TanStack Query (API 연동 시 추가) |
 | 결제 | PG사 테스트 모드 (예: 토스페이먼츠) |
 | 배포 | Docker, GitHub Actions, AWS(EC2/RDS/S3) |
 | 문서·테스트 | springdoc(Swagger), JUnit 5, AssertJ, k6 |
@@ -32,7 +32,8 @@
 ├── docs/
 │   ├── REQUIREMENTS.md      # 요구사항 명세 (기준 문서)
 │   ├── db-design.md         # DB 구성, 스키마·JDBC 규칙, 결제·정원 처리 규칙
-│   └── erd.md               # ERD (테이블·컬럼·제약 상세)
+│   ├── erd.md               # ERD (테이블·컬럼·제약 상세)
+│   └── design/stitch/       # Stitch 화면 시안 원본 (화면별 code.html + 디자인 시스템 문서)
 ├── db/                      # SQL 파일
 │   └── migration/           # Flyway 마이그레이션 (V1__xxx.sql)
 ├── backend/                 # Java 백엔드
@@ -44,12 +45,15 @@
 │       ├── application/
 │       ├── payment/
 │       └── refund/
-└── frontend/                # React + Vite
+└── frontend/                # React + Vite + TypeScript + Tailwind
+    ├── tailwind.config.js   # 디자인 토큰 (Stitch 시안 기준)
     └── src/
-        ├── pages/           # 화면 단위 (U-xx, A-xx)
+        ├── routes.tsx       # 경로 ↔ 화면 매핑 (U-xx, A-xx)
+        ├── layouts/         # UserLayout(헤더·푸터), AdminLayout(사이드바)
+        ├── pages/           # 화면 단위 (U-xx), pages/admin/ (A-xx)
         ├── components/      # 공통 컴포넌트
-        ├── api/             # API 호출 함수
-        └── hooks/
+        ├── api/             # API 호출 함수 (예정)
+        └── hooks/           # (예정)
 ```
 
 백엔드 패키지는 **도메인별**로 나누고, 각 도메인 안에서 `controller / service / repository / domain / dto`로 나눈다.
@@ -102,6 +106,8 @@ docker compose up -d
   응답 형식: `{ "code": "COHORT_FULL", "message": "..." }`
 - API 경로: 사용자 `/api/**`, 관리자 `/api/admin/**`.
 - 커밋 메시지: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:` 접두사를 쓴다.
+- 프론트엔드 스타일은 `tailwind.config.js`의 디자인 토큰(`bg-canvas`, `text-ink`, `rounded-md` 등)을 쓴다.
+  임의 색상값(`#xxxxxx`)을 직접 쓰지 않는다. 디자인 원칙은 `docs/design/stitch/`의 디자인 시스템 문서를 따른다.
 
 ## 테스트 원칙
 
@@ -120,6 +126,7 @@ docker compose up -d
 
 - [ ] M0. 기획과 시안 (화면 설계서, Stitch 시안, ERD 확정)
   - [x] 1차 ERD 확정 (2026-11-24, `docs/erd.md`, 결제·정원 처리 규칙은 `docs/db-design.md` 8장)
+  - [x] Stitch 시안 14개 화면을 React 정적 페이지로 옮김 (2026-11-24, 데이터는 시안의 예시 값 그대로)
 - [ ] M1. 뼈대와 배포 파이프라인 (회원가입·로그인, Docker, GitHub Actions)
 - [ ] M2. 과정과 기수
 - [ ] M3. 지원과 심사
