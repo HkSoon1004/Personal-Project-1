@@ -246,22 +246,25 @@ erDiagram
     MEMBER ||--o{ APPLICATION : "지원한다"
     COURSE ||--o{ COHORT : "기수를 갖는다"
     COHORT ||--o{ APPLICATION : "지원을 받는다"
-    APPLICATION ||--o| PAYMENT : "결제된다"
+    APPLICATION ||--o{ PAYMENT : "결제를 시도한다"
     PAYMENT ||--o{ REFUND : "환불된다"
 ```
 
 DB 구성, 테이블 작성 규칙(네이밍·타입·제약 이름), 마이그레이션 방법은 `docs/db-design.md`를 따른다.
+**컬럼 타입·NULL·인덱스·CHECK 등 상세 ERD는 `docs/erd.md`가 기준이다.** 아래는 요약이다.
 
 ### 8.1 1차 테이블
 
+모든 테이블에 `created_at`, `updated_at`이 있다.
+
 | 테이블 | 주요 컬럼 | 제약·메모 |
 | --- | --- | --- |
-| `member` | id, email, password, name, phone, role, created_at | email UK |
-| `course` | id, title, category, summary, description, curriculum, is_public, created_at | category: BACKEND / FRONTEND / DESIGN / PM |
-| `cohort` | id, course_id, generation, recruit_start_at, recruit_end_at, start_date, end_date, capacity, min_capacity, reserved_count, price, funding_type, status, version | (course_id, generation) UK |
-| `application` | id, member_id, cohort_id, status, answers, payment_due_at, applied_at, reviewed_at | (member_id, cohort_id) UK |
-| `payment` | id, application_id, order_id, payment_key, amount, method, status, reserved_until, approved_at | application_id UK, order_id UK. status: READY / DONE / PARTIAL_CANCELED / CANCELED / FAILED |
-| `refund` | id, payment_id, amount, reason, status, retry_count, requested_at, refunded_at | payment 1:N |
+| `member` | id, email, password_hash, name, phone, role | email UK |
+| `course` | id, title, category, summary, description, curriculum, target_audience, faq, thumbnail_url, is_public | category: BACKEND / FRONTEND / DESIGN / PM |
+| `cohort` | id, course_id, generation, recruit_start_at, recruit_end_at, start_date, end_date, capacity, min_capacity, reserved_count, price, funding_type, status | (course_id, generation) UK |
+| `application` | id, member_id, cohort_id, status, answers(JSON), payment_due_at, payment_reminder_sent_at, reviewed_at | (member_id, cohort_id) UK. 지원 시각은 created_at |
+| `payment` | id, application_id, order_id, payment_key, amount, method, status, reserved_until, approved_at, fail_reason | application 1:N (시도마다 새 행), order_id UK. status: READY / DONE / PARTIAL_CANCELED / CANCELED / FAILED / EXPIRED |
+| `refund` | id, payment_id, amount, reason, status, retry_count, refunded_at | payment 1:N. 요청 시각은 created_at |
 
 ### 8.2 2차 테이블
 

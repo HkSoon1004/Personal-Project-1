@@ -53,8 +53,12 @@ Spring/JPA 없이 **JDBC로 SQL을 직접 작성**하는 것을 전제로 한다
 | 참/거짓 | `BOOLEAN` (`TINYINT(1)`) |
 | 제약 이름 | 유니크 `uk_{테이블}_{컬럼}`, 외래 키 `fk_{테이블}_{참조테이블}` |
 | 문자셋·엔진 | `utf8mb4`, InnoDB |
+| 공통 컬럼 | 모든 테이블에 `created_at`, `updated_at` (`DATETIME NOT NULL`) |
+| 시간 값 넣기 | DB 기본값(`DEFAULT CURRENT_TIMESTAMP`)에 기대지 않고 **애플리케이션이 Asia/Seoul 시각을 넣는다.** 테스트에서 시간을 고정하기 쉽다 |
+| 외래 키 | 실제 FK 제약을 건다. 삭제는 막는다(`RESTRICT`, 기본값). 과정은 지우지 않고 `is_public`으로 숨긴다 |
+| CHECK 제약 | 값 범위가 명확한 곳(정원, 금액)에 건다. MySQL 8.0.16부터 실제로 검사한다. 애플리케이션 검증을 대신하지 않는 안전망이다 |
 
-테이블 목록과 컬럼은 `docs/REQUIREMENTS.md`의 "8. 데이터 모델"을 기준으로 한다.
+테이블과 컬럼 상세는 [`erd.md`](erd.md)를 기준으로 한다.
 
 ## 5. JDBC 코드 규칙
 
@@ -75,7 +79,47 @@ Spring/JPA 없이 **JDBC로 SQL을 직접 작성**하는 것을 전제로 한다
   테스트 시작 시 Flyway 마이그레이션을 그대로 실행해 운영과 같은 스키마를 쓴다.
 - Testcontainers를 쓰려면 테스트를 돌리는 PC와 CI에 Docker가 있어야 한다.
 
-## 7. 앞으로 이 문서에 추가할 내용
+## 7. ERD
 
-- M0에서 확정한 ERD와 테이블별 설명
+테이블·컬럼·인덱스·CHECK 제약 상세는 [`erd.md`](erd.md)에 있다.
+
+## 8. 결제·정원 처리 규칙 (DB 관점)
+
+### 8.1 `reserved_count`가 세는 것
+
+`reserved_count` = **선점 중(READY)인 결제 수 + 결제 완료(DONE)된 자리 수**
+
+| 사건 | `reserved_count` | 결제 상태 |
+| --- | --- | --- |
+| 결제 준비 (선점) | +1 (원자적 UPDATE, 실패 시 `COHORT_FULL`) | `READY` 생성 |
+| 결제 승인 성공 | 그대로 (선점이 확정으로 바뀜) | `READY → DONE` |
+| 결제 실패 | -1 | `READY → FAILED` |
+| 선점 10분 만료 | -1 | `READY → EXPIRED` |
+| 환불 완료 | -1 | `DONE → CANCELED` 또는 `PARTIAL_CANCELED` |
+
+### 8.2 자리를 두 번 반환하지 않기
+
+자리 반환(-1)은 **결제 상태를 바꾸는 UPDATE가 실제로 1행을 바꿨을 때만** 한다.
+스케줄러와 사용자 요청이 같은 결제를 동시에 처리해도 한쪽만 성공한다.
+
+```sql
+UPDATE payment SET status = 'EXPIRED', updated_at = ? WHERE id = ? AND status = 'READY';
+-- 영향받은 행이 1일 때만 이어서 실행
+UPDATE cohort SET reserved_count = reserved_count - 1, updated_at = ? WHERE id = ?;
+```
+
+두 UPDATE는 같은 트랜잭션 안에서 실행한다.
+
+### 8.3 지원서 하나에 진행 중인 결제는 하나만
+
+결제 준비와 승인은 **지원서 행을 먼저 잠그고**(`SELECT ... FROM application WHERE id = ? FOR UPDATE`) 시작한다.
+잠근 뒤 다음을 확인한다.
+
+- 결제 준비: 지원서가 `ACCEPTED`이고 기한 안인지, 아직 만료되지 않은 `READY` 결제가 있는지.
+  있으면 새로 선점하지 않는다. (결제 창을 두 번 열어 자리를 두 개 잡는 것을 막는다)
+- 결제 승인: 지원서가 여전히 `ACCEPTED`인지. 그래서 `DONE` 결제는 지원서당 하나만 생긴다.
+
+## 9. 앞으로 이 문서에 추가할 내용
+
+- 2차 테이블 설계는 `erd.md`에 추가한다
 - 쿼리 메모, 인덱스 설계 근거 등 DB 관련 결정 기록

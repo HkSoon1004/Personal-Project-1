@@ -31,7 +31,8 @@
 ├── CLAUDE.md
 ├── docs/
 │   ├── REQUIREMENTS.md      # 요구사항 명세 (기준 문서)
-│   └── db-design.md         # DB 구성, 스키마·JDBC 규칙, ERD
+│   ├── db-design.md         # DB 구성, 스키마·JDBC 규칙, 결제·정원 처리 규칙
+│   └── erd.md               # ERD (테이블·컬럼·제약 상세)
 ├── db/                      # SQL 파일
 │   └── migration/           # Flyway 마이그레이션 (V1__xxx.sql)
 ├── backend/                 # Java 백엔드
@@ -118,6 +119,7 @@ docker compose up -d
 ## 현재 진행 단계
 
 - [ ] M0. 기획과 시안 (화면 설계서, Stitch 시안, ERD 확정)
+  - [x] 1차 ERD 확정 (2026-11-24, `docs/erd.md`, 결제·정원 처리 규칙은 `docs/db-design.md` 8장)
 - [ ] M1. 뼈대와 배포 파이프라인 (회원가입·로그인, Docker, GitHub Actions)
 - [ ] M2. 과정과 기수
 - [ ] M3. 지원과 심사
