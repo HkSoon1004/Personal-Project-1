@@ -11,6 +11,7 @@
 ```mermaid
 erDiagram
     MEMBER ||--o{ APPLICATION : "지원한다"
+    MEMBER ||--o{ LOGIN_SESSION : "로그인한다"
     COURSE ||--o{ COHORT : "기수를 갖는다"
     COHORT ||--o{ APPLICATION : "지원을 받는다"
     APPLICATION ||--o{ PAYMENT : "결제를 시도한다"
@@ -81,6 +82,12 @@ erDiagram
         varchar status
         int retry_count
         datetime refunded_at
+    }
+    LOGIN_SESSION {
+        bigint id PK
+        bigint member_id FK
+        char token_hash UK
+        datetime expires_at
     }
 ```
 
@@ -195,6 +202,22 @@ erDiagram
 
 - 환불 요청 시각은 `created_at`을 쓴다. (요구사항 초안의 `requested_at`)
 - CHECK: `amount > 0`
+
+### 1.7 login_session (로그인 세션)
+
+세션 방식 인증용 테이블. 흐름과 보안 규칙은 [`backend-design.md`](backend-design.md) 3장을 따른다.
+2차의 설명회 예약(`session_reservation`)과 헷갈리지 않도록 이름에 `login_`을 붙였다.
+
+| 컬럼 | 타입 | NULL | 설명 |
+| --- | --- | --- | --- |
+| id | BIGINT AUTO_INCREMENT | N | PK |
+| member_id | BIGINT | N | FK → member. `fk_login_session_member` |
+| token_hash | CHAR(64) | N | 세션 토큰의 SHA-256 해시(16진수 64자). 토큰 원문은 저장하지 않는다. `uk_login_session_token_hash` |
+| expires_at | DATETIME | N | 만료 시각 (로그인 + 7일) |
+
+- 로그인 시각은 `created_at`을 쓴다.
+- 로그아웃하면 행을 지운다. 만료된 행은 스케줄러가 지운다.
+- 인덱스: `idx_login_session_expires_at (expires_at)`: 만료 세션 정리
 
 ## 2. 2차 테이블 (예정)
 

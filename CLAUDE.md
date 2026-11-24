@@ -16,13 +16,13 @@
 
 | 영역 | 스택 |
 | --- | --- |
-| 백엔드 | Java 21, Gradle — **Spring 미사용 결정(2026-11-24)**. HTTP 서버·JSON·인증 방식은 미정이며, 이 표의 다른 Spring 관련 항목과 아래 컨벤션도 확정 후 갱신한다 |
+| 백엔드 | Java 21, Gradle, **Spring 미사용**: JDK 내장 HttpServer + 가상 스레드, Jackson, 세션(DB 저장) 인증, BCrypt, SLF4J + Logback. 상세는 `docs/backend-design.md` |
 | DB | MySQL 8, JDBC 직접 사용(ORM 없음), HikariCP, Flyway (테스트: Testcontainers). 상세는 `docs/db-design.md` |
 | 캐시·락 | Redis (2차부터) |
 | 프론트엔드 | React 19, Vite, TypeScript, React Router, Tailwind CSS v3 (디자인 토큰은 Stitch 시안에서 가져옴), TanStack Query (API 연동 시 추가) |
 | 결제 | PG사 테스트 모드 (예: 토스페이먼츠) |
 | 배포 | Docker, GitHub Actions, AWS(EC2/RDS/S3) |
-| 문서·테스트 | springdoc(Swagger), JUnit 5, AssertJ, k6 |
+| 문서·테스트 | API 명세는 `docs/api.md`에 직접 작성, JUnit 5, AssertJ, Testcontainers, k6 |
 
 ## 저장소 구조 (예정)
 
@@ -31,14 +31,17 @@
 ├── CLAUDE.md
 ├── docs/
 │   ├── REQUIREMENTS.md      # 요구사항 명세 (기준 문서)
+│   ├── backend-design.md    # 백엔드 기술 선택, 요청 흐름, 세션 인증, 패키지 구조
+│   ├── conventions.md       # 코딩 컨벤션·테스트 원칙
 │   ├── db-design.md         # DB 구성, 스키마·JDBC 규칙, 결제·정원 처리 규칙
 │   ├── erd.md               # ERD (테이블·컬럼·제약 상세)
 │   └── design/stitch/       # Stitch 화면 시안 원본 (화면별 code.html + 디자인 시스템 문서)
 ├── db/                      # SQL 파일
 │   └── migration/           # Flyway 마이그레이션 (V1__xxx.sql)
-├── backend/                 # Java 백엔드
+├── backend/                 # Java 백엔드 (Spring 없음)
 │   └── src/main/java/.../
-│       ├── global/          # 공통 설정, 예외 처리, 보안, 응답 포맷
+│       ├── Application.java # main: 설정 → 객체 연결(생성자 주입) → 서버 시작
+│       ├── global/          # config, http(라우터·필터·예외 처리), json, db(트랜잭션), auth(세션), error, time
 │       ├── member/
 │       ├── course/
 │       ├── cohort/
@@ -56,15 +59,14 @@
         └── hooks/           # (예정)
 ```
 
-백엔드 패키지는 **도메인별**로 나누고, 각 도메인 안에서 `controller / service / repository / domain / dto`로 나눈다.
 
 ## 자주 쓰는 명령어
 
 ```bash
 # 백엔드
-cd backend && ./gradlew bootRun
+cd backend && ./gradlew run          # 서버 실행 (application 플러그인)
 cd backend && ./gradlew test
-cd backend && ./gradlew build
+cd backend && ./gradlew installDist  # 배포용 실행 묶음 생성
 
 # 프론트엔드
 cd frontend && npm install
@@ -77,7 +79,7 @@ docker compose up -d
 
 ## 반드시 지킬 도메인 규칙
 
-1. **지원서 상태 전이**는 엔티티 메서드로만 바꾼다. 허용되지 않은 전이는 예외를 던진다.
+1. **지원서 상태 전이**는 도메인 객체의 메서드로만 바꾼다. 허용되지 않은 전이는 예외를 던진다.
    - `SUBMITTED → ACCEPTED | REJECTED | CANCELED`
    - `ACCEPTED → CONFIRMED | EXPIRED`
    - `CONFIRMED → REFUNDED | COMPLETED`
@@ -93,32 +95,15 @@ docker compose up -d
 6. **환불액 계산은 `RefundPolicy`로 분리**하고 경계값 테스트를 반드시 작성한다.
 7. 금액은 원 단위 정수(`Long`), 시간은 `Asia/Seoul` 기준으로 통일한다.
 
-## 코딩 컨벤션
+## 코딩 컨벤션·테스트 원칙
 
-- 엔티티에 `@Setter`를 쓰지 않는다. 상태 변경은 의도가 드러나는 메서드(`accept()`, `confirmPayment()`)로 한다.
-- 컨트롤러는 DTO만 주고받고, 엔티티를 그대로 응답하지 않는다.
-- 트랜잭션은 서비스 계층에서 트랜잭션 도우미(`inTransaction(conn -> ...)`)로 시작하고,
-  같은 트랜잭션의 Repository 호출에는 같은 `Connection`을 넘긴다.
-- SQL 값은 항상 `PreparedStatement`의 `?`로 넣고, JDBC 자원은 try-with-resources로 연다.
-- 스키마 변경은 Flyway 마이그레이션 파일로만 한다. 이미 실행된 마이그레이션 파일은 고치지 않고 새 파일을 추가한다.
-- DB 규칙 상세(네이밍, 타입, 테스트)는 `docs/db-design.md`를 따른다.
-- 예외는 `BusinessException(ErrorCode)` 하나로 통일하고 `@RestControllerAdvice`에서 처리한다.
-  응답 형식: `{ "code": "COHORT_FULL", "message": "..." }`
-- API 경로: 사용자 `/api/**`, 관리자 `/api/admin/**`.
-- 커밋 메시지: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:` 접두사를 쓴다.
-- 프론트엔드 스타일은 `tailwind.config.js`의 디자인 토큰(`bg-canvas`, `text-ink`, `rounded-md` 등)을 쓴다.
-  임의 색상값(`#xxxxxx`)을 직접 쓰지 않는다. 디자인 원칙은 `docs/design/stitch/`의 디자인 시스템 문서를 따른다.
+코딩 컨벤션과 테스트 원칙은 `docs/conventions.md`에 있다. 아래 줄로 이 파일과 함께 자동으로 불러온다.
 
-## 테스트 원칙
-
-- 도메인 규칙(상태 전이, 환불 정책, 가격 계산)은 **단위 테스트**로 검증한다.
-- 정원 동시성은 `ExecutorService` + `CountDownLatch`로 동시 요청 테스트를 작성한다.
-- DB가 필요한 테스트(Repository, 동시성)는 Testcontainers로 띄운 MySQL에서 실행한다. H2는 쓰지 않는다.
-- 외부 PG 호출은 인터페이스로 감싸고 테스트에서는 가짜 구현을 쓴다.
+@docs/conventions.md
 
 ## 하지 말 것
 
-- PG 시크릿 키, DB 비밀번호, JWT 시크릿을 코드나 저장소에 넣지 않는다. 환경 변수와 GitHub Secrets를 쓴다.
+- PG 시크릿 키, DB 비밀번호 같은 비밀 값을 코드나 저장소에 넣지 않는다. 환경 변수와 GitHub Secrets를 쓴다.
 - `docs/REQUIREMENTS.md`의 단계(1차/2차/3차)를 건너뛰어 2차 기능을 먼저 만들지 않는다.
 - 요청받지 않은 대규모 리팩터링이나 라이브러리 추가를 하지 않는다. 필요하면 먼저 제안한다.
 
@@ -127,6 +112,7 @@ docker compose up -d
 - [ ] M0. 기획과 시안 (화면 설계서, Stitch 시안, ERD 확정)
   - [x] 1차 ERD 확정 (2026-11-24, `docs/erd.md`, 결제·정원 처리 규칙은 `docs/db-design.md` 8장)
   - [x] Stitch 시안 14개 화면을 React 정적 페이지로 옮김 (2026-11-24, 데이터는 시안의 예시 값 그대로)
+  - [x] 백엔드 기술 결정 (2026-11-24, `docs/backend-design.md`)
 - [ ] M1. 뼈대와 배포 파이프라인 (회원가입·로그인, Docker, GitHub Actions)
 - [ ] M2. 과정과 기수
 - [ ] M3. 지원과 심사

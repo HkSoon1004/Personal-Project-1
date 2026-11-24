@@ -36,8 +36,8 @@
 | 역할 | 설명 | 권한 |
 | --- | --- | --- |
 | 비회원 | 과정 탐색, 사전 알림·설명회 신청(2차) | 없음 |
-| 회원 | 지원, 결제, 환불, 마이페이지 | `ROLE_USER` |
-| 관리자 | 과정·기수 관리, 심사, 결제·환불 관리 | `ROLE_ADMIN` |
+| 회원 | 지원, 결제, 환불, 마이페이지 | `USER` (`member.role`) |
+| 관리자 | 과정·기수 관리, 심사, 결제·환불 관리 | `ADMIN` (`member.role`) |
 
 수강생은 별도 권한이 아니라 "결제 완료된 지원서를 가진 회원"이다.
 
@@ -147,12 +147,12 @@
 | ID | 분류 | 요구사항 |
 | --- | --- | --- |
 | NFR-01 | 정합성 | 동시 결제 요청 500건, 정원 30명 조건에서 확정 인원이 정원을 넘지 않는다 |
-| NFR-02 | 보안 | 비밀번호는 암호화 저장, 관리자 API는 `ROLE_ADMIN`만 접근한다 |
+| NFR-02 | 보안 | 비밀번호는 BCrypt로 해시해 저장, 로그인은 세션(HttpOnly 쿠키) 방식, 관리자 API는 `ADMIN` 역할만 접근한다 |
 | NFR-03 | 보안 | PG 시크릿 키, DB 비밀번호 등은 환경 변수로 관리하고 저장소에 올리지 않는다 |
 | NFR-04 | 신뢰성 | 결제 금액은 항상 서버에 저장된 값을 기준으로 검증한다 |
 | NFR-05 | 일관성 | 금액은 원 단위 정수, 시간은 Asia/Seoul 기준으로 통일한다 |
 | NFR-06 | 운영 | main 브랜치에 병합하면 GitHub Actions로 자동 빌드·배포된다 |
-| NFR-07 | 문서화 | API 문서는 Swagger(springdoc)로 자동 생성한다 |
+| NFR-07 | 문서화 | API 명세(요청·응답 예시 포함)는 `docs/api.md`에 직접 작성해 관리한다 |
 | NFR-08 | 테스트 | 상태 전이, 환불 정책, 정원 동시성은 자동화 테스트로 검증한다 |
 | NFR-09 | 데이터 | DB는 MySQL 8을 쓰고, 스키마 변경은 버전 관리되는 마이그레이션(Flyway)으로만 한다 |
 | NFR-10 | 테스트 | DB가 필요한 테스트는 운영과 같은 MySQL(Testcontainers)에서 실행한다 |
@@ -244,6 +244,7 @@ stateDiagram-v2
 ```mermaid
 erDiagram
     MEMBER ||--o{ APPLICATION : "지원한다"
+    MEMBER ||--o{ LOGIN_SESSION : "로그인한다"
     COURSE ||--o{ COHORT : "기수를 갖는다"
     COHORT ||--o{ APPLICATION : "지원을 받는다"
     APPLICATION ||--o{ PAYMENT : "결제를 시도한다"
@@ -265,6 +266,7 @@ DB 구성, 테이블 작성 규칙(네이밍·타입·제약 이름), 마이그�
 | `application` | id, member_id, cohort_id, status, answers(JSON), payment_due_at, payment_reminder_sent_at, reviewed_at | (member_id, cohort_id) UK. 지원 시각은 created_at |
 | `payment` | id, application_id, order_id, payment_key, amount, method, status, reserved_until, approved_at, fail_reason | application 1:N (시도마다 새 행), order_id UK. status: READY / DONE / PARTIAL_CANCELED / CANCELED / FAILED / EXPIRED |
 | `refund` | id, payment_id, amount, reason, status, retry_count, refunded_at | payment 1:N. 요청 시각은 created_at |
+| `login_session` | id, member_id, token_hash, expires_at | token_hash UK. 세션 방식 로그인용 |
 
 ### 8.2 2차 테이블
 
@@ -284,7 +286,9 @@ DB 구성, 테이블 작성 규칙(네이밍·타입·제약 이름), 마이그�
 | 메서드 | 경로 | 설명 | 권한 | 관련 요구사항 |
 | --- | --- | --- | --- | --- |
 | POST | `/api/auth/signup` | 회원가입 | 비회원 | FR-MEM-01 |
-| POST | `/api/auth/login` | 로그인 | 비회원 | FR-MEM-03 |
+| POST | `/api/auth/login` | 로그인 (세션 쿠키 발급) | 비회원 | FR-MEM-03 |
+| POST | `/api/auth/logout` | 로그아웃 (세션 삭제) | USER | FR-MEM-03 |
+| GET | `/api/me` | 내 정보 조회 (프론트의 로그인 상태 확인용) | USER | FR-MEM-03 |
 | PATCH | `/api/me` | 내 정보 수정 | USER | FR-MEM-04 |
 | GET | `/api/courses?category=` | 과정 목록 | 모두 | FR-CRS-01 |
 | GET | `/api/courses/{courseId}` | 과정 상세 + 기수 목록 | 모두 | FR-CRS-03 |
@@ -307,6 +311,12 @@ DB 구성, 테이블 작성 규칙(네이밍·타입·제약 이름), 마이그�
 
 | 코드 | HTTP | 설명 |
 | --- | --- | --- |
+| `INVALID_INPUT` | 400 | 요청 값 형식·필수값 오류 |
+| `UNAUTHORIZED` | 401 | 로그인 필요 (세션 없음·만료) |
+| `LOGIN_FAILED` | 401 | 이메일 또는 비밀번호 불일치 |
+| `FORBIDDEN` | 403 | 권한 없음 (관리자 API 등) |
+| `NOT_FOUND` | 404 | 대상 없음 |
+| `INTERNAL_ERROR` | 500 | 서버 내부 오류 (상세 내용은 로그에만 남긴다) |
 | `DUPLICATE_EMAIL` | 409 | 이미 가입된 이메일 |
 | `COHORT_NOT_RECRUITING` | 400 | 모집 중이 아닌 기수 |
 | `DUPLICATE_APPLICATION` | 409 | 같은 기수에 이미 지원 |
@@ -335,6 +345,6 @@ DB 구성, 테이블 작성 규칙(네이밍·타입·제약 이름), 마이그�
 ## 11. 미결정 사항
 
 - [ ] 정원 선점 시점: 결제 시작 시(현재 가안) vs 합격 시
-- [ ] 인증 방식: JWT vs 세션
+- [x] 인증 방식: 세션 + DB 저장으로 결정 (2026-11-24, `docs/backend-design.md` 3장)
 - [ ] 결제 기한 기본값(72시간)과 선점 유지 시간(10분) 확정
 - [ ] 배포 환경: AWS vs 저비용 PaaS
