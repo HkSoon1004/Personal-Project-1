@@ -16,8 +16,8 @@
 
 | 영역 | 스택 |
 | --- | --- |
-| 백엔드 | Java 21, Spring Boot 3, Spring Data JPA, Spring Security, Gradle |
-| DB | MySQL 8 (테스트: H2 또는 Testcontainers) |
+| 백엔드 | Java 21, Gradle — **Spring 미사용 결정(2026-11-24)**. HTTP 서버·JSON·인증 방식은 미정이며, 이 표의 다른 Spring 관련 항목과 아래 컨벤션도 확정 후 갱신한다 |
+| DB | MySQL 8, JDBC 직접 사용(ORM 없음), HikariCP, Flyway (테스트: Testcontainers). 상세는 `docs/db-design.md` |
 | 캐시·락 | Redis (2차부터) |
 | 프론트엔드 | React, Vite, React Router, TanStack Query (TypeScript 선택) |
 | 결제 | PG사 테스트 모드 (예: 토스페이먼츠) |
@@ -30,8 +30,11 @@
 /
 ├── CLAUDE.md
 ├── docs/
-│   └── REQUIREMENTS.md      # 요구사항 명세 (기준 문서)
-├── backend/                 # Spring Boot
+│   ├── REQUIREMENTS.md      # 요구사항 명세 (기준 문서)
+│   └── db-design.md         # DB 구성, 스키마·JDBC 규칙, ERD
+├── db/                      # SQL 파일
+│   └── migration/           # Flyway 마이그레이션 (V1__xxx.sql)
+├── backend/                 # Java 백엔드
 │   └── src/main/java/.../
 │       ├── global/          # 공통 설정, 예외 처리, 보안, 응답 포맷
 │       ├── member/
@@ -89,7 +92,11 @@ docker compose up -d
 
 - 엔티티에 `@Setter`를 쓰지 않는다. 상태 변경은 의도가 드러나는 메서드(`accept()`, `confirmPayment()`)로 한다.
 - 컨트롤러는 DTO만 주고받고, 엔티티를 그대로 응답하지 않는다.
-- 트랜잭션은 서비스 계층에 둔다. 조회 전용은 `@Transactional(readOnly = true)`.
+- 트랜잭션은 서비스 계층에서 트랜잭션 도우미(`inTransaction(conn -> ...)`)로 시작하고,
+  같은 트랜잭션의 Repository 호출에는 같은 `Connection`을 넘긴다.
+- SQL 값은 항상 `PreparedStatement`의 `?`로 넣고, JDBC 자원은 try-with-resources로 연다.
+- 스키마 변경은 Flyway 마이그레이션 파일로만 한다. 이미 실행된 마이그레이션 파일은 고치지 않고 새 파일을 추가한다.
+- DB 규칙 상세(네이밍, 타입, 테스트)는 `docs/db-design.md`를 따른다.
 - 예외는 `BusinessException(ErrorCode)` 하나로 통일하고 `@RestControllerAdvice`에서 처리한다.
   응답 형식: `{ "code": "COHORT_FULL", "message": "..." }`
 - API 경로: 사용자 `/api/**`, 관리자 `/api/admin/**`.
@@ -99,6 +106,7 @@ docker compose up -d
 
 - 도메인 규칙(상태 전이, 환불 정책, 가격 계산)은 **단위 테스트**로 검증한다.
 - 정원 동시성은 `ExecutorService` + `CountDownLatch`로 동시 요청 테스트를 작성한다.
+- DB가 필요한 테스트(Repository, 동시성)는 Testcontainers로 띄운 MySQL에서 실행한다. H2는 쓰지 않는다.
 - 외부 PG 호출은 인터페이스로 감싸고 테스트에서는 가짜 구현을 쓴다.
 
 ## 하지 말 것

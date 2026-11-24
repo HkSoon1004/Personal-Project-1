@@ -154,6 +154,8 @@
 | NFR-06 | 운영 | main 브랜치에 병합하면 GitHub Actions로 자동 빌드·배포된다 |
 | NFR-07 | 문서화 | API 문서는 Swagger(springdoc)로 자동 생성한다 |
 | NFR-08 | 테스트 | 상태 전이, 환불 정책, 정원 동시성은 자동화 테스트로 검증한다 |
+| NFR-09 | 데이터 | DB는 MySQL 8을 쓰고, 스키마 변경은 버전 관리되는 마이그레이션(Flyway)으로만 한다 |
+| NFR-10 | 테스트 | DB가 필요한 테스트는 운영과 같은 MySQL(Testcontainers)에서 실행한다 |
 
 ---
 
@@ -247,6 +249,8 @@ erDiagram
     APPLICATION ||--o| PAYMENT : "결제된다"
     PAYMENT ||--o{ REFUND : "환불된다"
 ```
+
+DB 구성, 테이블 작성 규칙(네이밍·타입·제약 이름), 마이그레이션 방법은 `docs/db-design.md`를 따른다.
 
 ### 8.1 1차 테이블
 
